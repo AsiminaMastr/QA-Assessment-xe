@@ -100,13 +100,6 @@ Main E2E scenario with:
 
 ---
 
-## 🚀 Running the Tests
-
-### 1️⃣ Install dependencies
-```bash
-mvn clean install
-```bash
-
 📌 Requirements Coverage
 Feature	Status
 Rent / Residence selection	✔
