@@ -1,159 +1,140 @@
-XE.gr Property Search – UI Automation
+# 🏠 XE.gr Property Search – UI Automation
 
-This repository contains an automated UI test for XE.gr Real Estate Search, implemented with Selenium WebDriver, Java, and TestNG.
+A complete end-to-end UI automation test for **XE.gr Real Estate Search**, built with:
 
-The test performs a complete end-to-end validation of the property search workflow, including filtering, area selection, result validation, lazy loading, pagination, and sorting.
+- **Java 17**
+- **Selenium WebDriver**
+- **TestNG**
+- **Page Object Model (POM)**
 
-🔍 Test Scope
+This test validates search functionality, results accuracy, pagination, lazy loading, and sorting behavior on XE’s property listing portal.
 
-The test verifies that the XE property search works correctly when applying the following criteria:
+---
 
-Search Criteria
+## 🎯 Project Goal
 
-Transaction: Rent (Ενοικίαση)
+To ensure that the **Rent property search** on XE.gr functions correctly under a combined set of filters and dynamic UI behaviors.
 
-Property Type: Residence (Κατοικία)
+The test simulates real user actions and validates **every listing** returned in the results.
 
-Area: All autocomplete options matching “Παγκράτι”
+---
 
-Price Range: €200–€700
+## 🔍 Test Scope
 
-Size Range: 75–150 m²
+### **Applied Search Filters**
+- **Transaction**: Rent (Ενοικίαση)
+- **Property Type**: Residence (Κατοικία)
+- **Area**: Select *all* autocomplete options matching **“Παγκράτι”**
+- **Price Range**: **€200–€700**
+- **Size Range**: **75–150 m²**
+- **Sorting**: Price (descending)
 
-Sorting: Price (descending)
+---
 
-Validation Criteria
+## ✔ Validation Rules
 
-For every displayed listing (including lazy-loaded and multi-page results):
+For **every listing** shown on the results page, across all pages and lazy-loaded items:
 
-Price is within 200–700 €
+| Validation | Expected |
+|-----------|----------|
+| Price range | 200–700 € |
+| Square meters | 75–150 m² |
+| Max number of images | ≤ 30 |
+| Sorting | Proper descending price order |
+| Step-level reporting | PASS/FAIL with explanations |
 
-Size is within 75–150 m²
+The test logs **exactly which listing passed or failed**, including price, square meters, and number of images.
 
-Listing contains ≤ 30 images
+---
 
-Sorting by price (descending) works correctly
+## 🧩 Architecture & Design
 
-Step-level pass/fail results are logged
-
-Failed checks include detailed explanations
-
-📁 Project Structure
+This project follows the **Page Object Model** (POM) pattern.
 src/test/java/
- └── gr/xe/qa/
-     ├── base/
-     │    └── BaseTest.java
-     ├── pages/
-     │    ├── HomePage.java
-     │    └── SearchResultsPage.java
-     ├── util/
-     │    └── AdCard.java
-     └── tests/
-          └── RentSearchSmokeTest.java
+└── gr/xe/qa/
+├── base/
+│ └── BaseTest.java
+├── pages/
+│ ├── HomePage.java
+│ └── SearchResultsPage.java
+├── util/
+│ └── AdCard.java
+└── tests/
+└── RentSearchSmokeTest.java
 
-BaseTest.java
 
-Initializes WebDriver, browser configuration, and global waits.
 
-HomePage.java
+### **BaseTest.java**
+- WebDriver setup  
+- Window management  
+- Global waits  
+- Teardown  
 
-Handles cookie banner, filters (Rent/Residence), autocomplete selection for Παγκράτι, and submitting the search.
+### **HomePage.java**
+Handles:
+- Accepting cookies  
+- Selecting Rent + Residence  
+- Selecting *all* Παγκράτι-related areas  
+- Clicking Search  
 
-SearchResultsPage.java
+### **SearchResultsPage.java**
+Responsible for:
+- Applying price & size filters  
+- Sorting by price (descending)  
+- Reading lazy-loaded cards via scroll  
+- Handling pagination  
+- Returning `AdCard` objects  
 
-Handles price/size filters, sorting by price descending, pagination, and lazy-loading through scroll-based loading.
+### **AdCard.java**
+Extracts:
+- Price  
+- Size (m²)  
+- Image count (carousel, placeholder, sponsored)  
 
-AdCard.java
+### **RentSearchSmokeTest.java**
+Main E2E scenario with:
+- `[STEP X]` logs  
+- PASS/FAIL classification  
+- Detailed reasons for failures  
+- Soft assertions  
 
-Represents a single listing. Extracts:
+---
 
-Price
+## 🚀 Running the Tests
 
-Square meters
-
-Number of images (supports carousels, placeholders, and sponsored ads)
-
-RentSearchSmokeTest.java
-
-End-to-end test containing:
-
-Step-by-step logging
-
-Pass/fail granularity
-
-Detailed failure messages
-
-Soft assertions to collect all issues before failing
-
-🚀 Running the Tests
-Install dependencies
+### 1️⃣ Install dependencies
+```bash
 mvn clean install
 
-Run all tests
-mvn test
-
-View TestNG Reports
-
-Reports are generated under:
-
-target/surefire-reports/
-
-
-These include:
-
-Step-level execution logs ([STEP X])
-
-Detailed pass/fail messages
-
-Assertions and stack traces
-
-✔ Features
-
-Full E2E UI workflow
-
-Dynamic autocomplete handling
-
-Lazy-loading support via scroll
-
-Multi-page result handling
-
-Accurate carousel image counting
-
-Sorting verification
-
-Structured step-by-step result logs
-
-Soft assertion–based reporting
-
-🧪 Example Output (Console)
-[STEP 1] Open home page, accept cookies, select filters
-[STEP 1][PASS]
-
-[STEP 2] Apply price and size filters
-[STEP 2][PASS]
-
-[STEP 3] Validate results in all lazy-loaded ads
-Page 1 | Ad 5 | price=700 | sqm=93 | images=12
-Page 1 | Ad 6 | price=600 | sqm=80 | images=13
-[STEP 3][PASS]
-
-[STEP 4] Sorting by price descending
-[STEP 4][PASS]
 
 📌 Requirements Coverage
-Requirement	Status
+Feature	Status
 Rent / Residence selection	✔
-Παγκράτι autocomplete handling	✔
-Price & size filters	✔
-Lazy-loaded ads collection	✔
-Pagination support	✔
-Validate price range	✔
-Validate size range	✔
-Validate ≤ 30 images	✔
-Sort by price desc	✔
-Step-level pass/fail reporting	✔
-Detailed failure explanations	✔
+Παγκράτι autocomplete selection	✔
+Price filter	✔
+Size filter	✔
+Lazy-load handling (scroll)	✔
+Pagination	✔
+Price validation	✔
+Size validation	✔
+≤ 30 images validation	✔
+Sorting by price descending	✔
+Step-level PASS/FAIL logs	✔
+Detailed explanations	✔
+✨ Highlights
+
+🔄 Handles dynamic UI with lazy loading (infinite scroll)
+
+🧩 Fully modular POM design
+
+📝 Rich debugging logs for each listing
+
+📊 Soft assert strategy → full report before failure
+
+💡 Realistic simulation of a human user
+
 👤 Author
 
-Created by Asimina Mastrogianni
-QA Engineer | Java & Selenium Test Automation
+Asimina Mastrogianni
+Quality Assurance Engineer
+Java | Selenium | Test Automation
