@@ -105,7 +105,7 @@ Main E2E scenario with:
 ### 1️⃣ Install dependencies
 ```bash
 mvn clean install
-
+```bash
 
 📌 Requirements Coverage
 Feature	Status
